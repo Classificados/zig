@@ -9,6 +9,7 @@ use App\Rules\Logged;
 use App\Models\Usuario;
 use App\Models\Sexo;
 use App\Models\Perfil;
+use App\Model\Empresa;
 
 use App\Services\UploadService\UploadFiles;
 use App\Services\SendEmail\SendEmail;

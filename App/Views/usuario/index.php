@@ -18,6 +18,73 @@ use App\Config\ConfigPerfil;
 
 <div class="row">
 
+  <div class="card col-lg-12 content-div">
+    <div class="card-body">
+      <h5 class="card-title">
+        <?php iconFilter();?>
+        Filtros
+      </h5>
+    </div>
+
+    <form method="POST" action="<?php echo BASEURL; ?>/pedido/tabelaDepedidosChamadosViaAjax" id="form">
+
+      <!-- token de segurança -->
+      <input type="hidden" name="_token" value="<?php echo TOKEN; ?>" />
+
+      <div class="row">
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" name="email" id="email" placeholder="Pesquisar por Email">
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="id_usuario">Empresas</label>
+            <select class="form-control" name="id_cliente" id="id_cliente_filtro">
+            <option value="todos">Todos</option>
+            <?php foreach ($clientes as $cliente) : ?>
+              <option value="<?php echo $cliente->id; ?>">
+                <?php echo $cliente->nome; ?>
+              </option>
+            <?php endforeach; ?>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-sm btn-success text-right pull-right" id="buscar-pedidos" style="margin-left:10px">
+            <i class="fas fa-search"></i> Buscar
+          </button>
+
+        </div>
+
+      </div>
+      <!--end row-->
+    </form>
+
+    <br>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="row">
+
 	<div class="card col-lg-12 content-div">
 		<div class="card-body">
 	        <h5 class="card-title"><i class="fas fa-users"></i> Usuários</h5>
