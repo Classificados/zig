@@ -23,8 +23,7 @@ $route->post('usuario/save', 'UsuarioController@save');
 $route->get('usuario/modalFormulario/{idUsuario?}', 'UsuarioController@modalFormulario');
 $route->post('usuario/update', 'UsuarioController@update');
 $route->get('usuario/verificaSeEmailExiste/{email}/{idUsuario?}', 'UsuarioController@verificaSeEmailExiste');
-
-$route->get('usuario/teste', 'UsuarioController@testeEmail');
+$route->post('usuario/usuariosChamadosViaAjax', 'UsuarioController@usuariosChamadosViaAjax');
 
 
 # ----- RelatorioController --------------------------------

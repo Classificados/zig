@@ -1,3 +1,6 @@
+<?php use System\HtmlComponents\Select\Select;?>
+
+
 <form method="post" action="<?php echo isset($cliente->id) ? BASEURL.'/cliente/update' : BASEURL.'/cliente/save';?>"
 	enctype='multipart/form-data'>
 	<div class="row">
@@ -49,17 +52,12 @@
 		        <label for="id_cliente_segmento">Segmento *</label>
 		        <select class="form-control" name="id_cliente_segmento" id="id_cliente_segmento">
 		        	<option value="selecione">Selecione</option>
-		        	<?php foreach ($clientesSegmentos as $clienteSegmento):?>
-		        		<?php if (isset($cliente->id) && $cliente->id_cliente_segmento == $clienteSegmento->id):?>
-		        		    <option value="<?php echo $cliente->id_cliente_segmento;?>"
-		        		    	selected="selected"><?php echo $clienteSegmento->descricao;?>
-		        		    </option>
-		        		<?php else:?>
-		        		    <option value="<?php echo $clienteSegmento->id;?>">
-		        		    	<?php echo $clienteSegmento->descricao;?>
-		        		    </option>
-		        	    <?php endif;?>
-		        	<?php endforeach;?>
+		        	<?php Select::option(
+                $clientesSegmentos,
+                'id',
+                isset($cliente->id_cliente_segmento) ? $cliente->id_cliente_segmento : false,
+                'descricao'
+                );?>
 		        </select>
 		    </div>
 		</div>

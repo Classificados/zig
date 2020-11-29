@@ -9,7 +9,7 @@ use App\Rules\Logged;
 use App\Models\Usuario;
 use App\Models\Sexo;
 use App\Models\Perfil;
-use App\Model\Empresa;
+use App\Models\Empresa;
 
 use App\Services\UploadService\UploadFiles;
 use App\Services\SendEmail\SendEmail;
@@ -48,15 +48,23 @@ class UsuarioController extends Controller
 
 	public function index()
 	{
-		$usuario = new Usuario();
+    $empresa = new Empresa();
+    $empresas = $empresa->all();
+
+    $this->view('usuario/index', $this->layout, compact('empresas'));
+  }
+
+  public function usuariosChamadosViaAjax()
+  {
+    $usuario = new Usuario();
 		$usuarios = $usuario->usuarios(
 			$this->idEmpresa,
 			$this->idUsuarioLogado,
 			$this->idPerfilUsuarioLogado
-		);
+    );
 
-		$this->view('usuario/index', $this->layout, compact('usuarios'));
-	}
+    $this->view('usuario/tabelaUsuarios', null, compact('usuarios'));
+  }
 
 	public function save()
 	{

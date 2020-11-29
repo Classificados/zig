@@ -26,7 +26,7 @@ use App\Config\ConfigPerfil;
       </h5>
     </div>
 
-    <form method="POST" action="<?php echo BASEURL; ?>/pedido/tabelaDepedidosChamadosViaAjax" id="form">
+    <form method="POST" action="<?php echo BASEURL; ?>/usuario/usuariosChamadosViaAjax" id="form">
 
       <!-- token de segurança -->
       <input type="hidden" name="_token" value="<?php echo TOKEN; ?>" />
@@ -40,18 +40,20 @@ use App\Config\ConfigPerfil;
           </div>
         </div>
 
+      <?php if (session::get('idPerfil') == ConfigPerfil::superAdmin()):?>
         <div class="col-md-4">
           <div class="form-group">
             <label for="id_usuario">Empresas</label>
             <select class="form-control" name="id_cliente" id="id_cliente_filtro">
-            <option value="todos">Todos</option>
-            <?php foreach ($clientes as $cliente) : ?>
-              <option value="<?php echo $cliente->id; ?>">
-                <?php echo $cliente->nome; ?>
+            <option value="todos">Todas</option>
+            <?php foreach ($empresas as $empresa) : ?>
+              <option value="<?php echo $empresa->id; ?>">
+                <?php echo $empresa->nome; ?>
               </option>
             <?php endforeach; ?>
             </select>
           </div>
+      <?php endif;?>
 
           <button type="submit" class="btn btn-sm btn-success text-right pull-right" id="buscar-pedidos" style="margin-left:10px">
             <i class="fas fa-search"></i> Buscar
@@ -68,106 +70,17 @@ use App\Config\ConfigPerfil;
   </div>
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<script src="<?php echo BASEURL; ?>/public/assets/js/core/jquery.min.js"></script>
 
 <div class="row">
-
-	<div class="card col-lg-12 content-div">
+  <div class="card col-lg-12 content-div">
 		<div class="card-body">
-	        <h5 class="card-title"><i class="fas fa-users"></i> Usuários</h5>
-	    </div>
-        <!-- Mostra as mensagens de erro-->
-	    <?php FlashMessage::show();?>
-
-        <?php if (count($usuarios) > 0):?>
-	    <table id="example" class="table tabela-ajustada table-striped" style="width:100%">
-	        <thead>
-	            <tr>
-	            	<th>#</th>
-	                <th>Nome</th>
-	                <th class="hidden-when-mobile">E-mail</th>
-	                <th>Perfil</th>
-	                <th style="text-align:right;padding-right:0">
-	                	<?php $rota = BASEURL.'/usuario/modalFormulario';?>
-	                	<?php if (Session::get('idPerfil') != ConfigPerfil::vendedor()):?>
-		                	<button onclick="modalUsuarios('<?php echo $rota;?>', false);"
-		                		class="btn btn-sm btn-success" title="Novo Usuário!">
-		                	    <i class="fas fa-plus"></i>
-		                    </button>
-	                    <?php endif;?>
-	                </th>
-	            </tr>
-	        </thead>
-	        <tbody>
-
-	        	<?php foreach ($usuarios as $usuario):?>
-		            <tr>
-		            	<td>
-		            		<?php if ( ! is_null($usuario->imagem) && $usuario->imagem != ''):?>
-		            			<center>
-		            				<img src="<?php echo $usuario->imagem;?>" width="40" class="imagem-perfil">
-		            			</center>
-		            		<?php else:?>
-		            			<center><i class="fas fa-user" style="font-size:40px"></i></center>
-		            		<?php endif;?>
-		            	</td>
-		                <td><?php echo $usuario->nome;?></td>
-		                <td class="hidden-when-mobile"><?php echo $usuario->email;?></td>
-		                <td><?php echo $usuario->perfil;?></td>
-		                <td style="text-align:right">
-
-						<div class="btn-group" role="group">
-						    <button id="btnGroupDrop1" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						      <i class="fas fa-cogs"></i>
-						    </button>
-						    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-
-						      <button class="dropdown-item" href="#"
-						      onclick="modalUsuarios('<?php echo $rota;?>', <?php echo $usuario->id;?>);">
-						      	<i class="fas fa-edit"></i> Editar
-						      </button>
-
-						      <!--<a class="dropdown-item" href="#">
-						      	<i class="fas fa-trash-alt" style="color:#cc6666"></i> Excluir
-						      </a>-->
-
-						    </div>
-						  </div>
-		                </td>
-		            </tr>
-	            <?php endforeach;?>
-	        <tfoot></tfoot>
-	    </table>
-	    <?php else:?>
-	    	<center>
-	    		<i class="far fa-grin-beam" style="font-size:50px;opacity:0.60"></i> <br> <br>
-	    	    Poxa, ainda não há nenhum Cliente cadastrado! <br>
-	    	    <?php $rota = BASEURL.'/usuario/modalFormulario';?>
-            	<button
-            	onclick="modalUsuarios('<?php echo $rota;?>', null);"
-            		class="btn btn-sm btn-success">
-            	    <i class="fas fa-plus"></i>
-                    Cadastrar Usuário
-                </button>
-	       </center>
-		<?php endif;?>
-
-    <br>
-
-   </div>
+	    <h5 class="card-title"><i class="fas fa-users"></i> Usuários</h5>
+	  </div>
+    <!-- Mostra as mensagens de erro-->
+	  <?php FlashMessage::show();?>
+    <div id="append-usuariosChamadosViaAjax"></div>
+  </div>
 </div>
 
 <?php Modal::start([
@@ -193,4 +106,18 @@ use App\Config\ConfigPerfil;
         $("#modalUsuarios").modal({backdrop: 'static'});
         $("#formulario").load(url);
     }
+
+  usuarios();
+  function usuarios() {
+    $('#append-usuariosChamadosViaAjax').html('<div class="col-md-12"><br><center><h3>Carregando...</h3></center></div>');
+    var rota = $('#form').attr('action');
+    $.post(rota,
+
+     $('#form').serialize(),
+
+    function(resultado) {
+      $('#append-usuariosChamadosViaAjax').empty();
+      $('#append-usuariosChamadosViaAjax').append(resultado);
+    });
+  }
 </script>
