@@ -4,6 +4,11 @@ ini_set('display_errors', 1);
   ini_set('display_startup_erros', 1);
   error_reporting(E_ALL);
 
+  $tempodevida = 2678400; // 1 ano de vida
+  session_set_cookie_params($tempodevida);
+  session_start();
+  setcookie(session_name(), session_id(), time() + $tempodevida, '/');
+
 if (
     (getenv('APP_ENV', 'local') != 'production' && getenv('APP_DISPLAY_ERRORS', 'false') == 'true') ||
     !file_exists('.env')

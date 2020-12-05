@@ -79,4 +79,13 @@ class Post
 
         return false;
     }
+
+    public function has($field)
+    {
+      if (isset($_POST[$field])) {
+        return true;
+      }
+
+      return false;
+    }
 }

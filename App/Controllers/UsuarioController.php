@@ -56,11 +56,22 @@ class UsuarioController extends Controller
 
   public function usuariosChamadosViaAjax()
   {
+    $idEmpresa = false;
+    if ($this->post->has('id_empresa') && $this->post->data()->id_empresa != 'todos') {
+      $idEmpresa = $this->post->data()->id_empresa;
+    } elseif ($this->post->has('id_empresa') && $this->post->data()->id_empresa == 'todos') {
+      $idEmpresa = false;
+    } else {
+      $idEmpresa = $this->idEmpresa;
+    }
+
     $usuario = new Usuario();
 		$usuarios = $usuario->usuarios(
-			$this->idEmpresa,
+			$idEmpresa,
 			$this->idUsuarioLogado,
-			$this->idPerfilUsuarioLogado
+      $this->idPerfilUsuarioLogado,
+      $this->post->data()->email,
+      $this->post->data()->status
     );
 
     $this->view('usuario/tabelaUsuarios', null, compact('usuarios'));

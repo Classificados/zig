@@ -6323,6 +6323,10 @@ License - nucleoapp.com/license/
   .sidebar .sidebar-wrapper li.active>[data-toggle="collapse"]+div .nav li a:after {
     top: 0;
   }
+
+  .navbar-collapse {
+    display:block!important;
+  }
 }
 
 @media screen and (max-width: 768px) {

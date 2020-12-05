@@ -14,7 +14,12 @@ use App\Config\ConfigPerfil;
 	    object-position:center;
 	    border-radius:50%;
 	}
+  #form {
+
+    float:right;
+  }
 </style>
+
 
 <div class="row">
 
@@ -26,12 +31,17 @@ use App\Config\ConfigPerfil;
       </h5>
     </div>
 
-    <form method="POST" action="<?php echo BASEURL; ?>/usuario/usuariosChamadosViaAjax" id="form">
+    <form method="POST" id="form">
 
       <!-- token de segurança -->
       <input type="hidden" name="_token" value="<?php echo TOKEN; ?>" />
 
       <div class="row">
+
+        <?php if (ConfigPerfil::superAdmin() != session::get('idPerfil')):?>
+          <div class="col-md-4">
+          </div>
+        <?php endif;?>
 
         <div class="col-md-4">
           <div class="form-group">
@@ -40,37 +50,50 @@ use App\Config\ConfigPerfil;
           </div>
         </div>
 
-      <?php if (session::get('idPerfil') == ConfigPerfil::superAdmin()):?>
         <div class="col-md-4">
           <div class="form-group">
-            <label for="id_usuario">Empresas</label>
-            <select class="form-control" name="id_cliente" id="id_cliente_filtro">
-            <option value="todos">Todas</option>
-            <?php foreach ($empresas as $empresa) : ?>
-              <option value="<?php echo $empresa->id; ?>">
-                <?php echo $empresa->nome; ?>
-              </option>
-            <?php endforeach; ?>
+            <label for="status">Status</label>
+            <select class="form-control" name="status" id="status">
+              <option value="todos">Todos</option>
+              <option value="ativos" selected>Ativos</option>
+              <option value="desativados">Desativados</option>
             </select>
           </div>
-      <?php endif;?>
-
-          <button type="submit" class="btn btn-sm btn-success text-right pull-right" id="buscar-pedidos" style="margin-left:10px">
-            <i class="fas fa-search"></i> Buscar
-          </button>
-
         </div>
+
+        <?php if (ConfigPerfil::superAdmin() == session::get('idPerfil')):?>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="id_usuario">Empresas</label>
+              <select class="form-control" name="id_empresa" id="id_empresa">
+              <option value="todos">Todas</option>
+              <?php foreach ($empresas as $empresa) : ?>
+                <option value="<?php echo $empresa->id; ?>">
+                  <?php echo $empresa->nome; ?>
+                </option>
+              <?php endforeach; ?>
+              </select>
+            </div>
+          </div>
+        <?php endif;?>
 
       </div>
       <!--end row-->
-    </form>
 
+      <button type="submit" class="btn btn-sm btn-success text-right pull-right" id="buscar-pedidos"
+        style="float:right"
+        onclick="return buscarUsuarios()">
+          <i class="fas fa-search"></i> Buscar
+      </button>
+
+    </form>
     <br>
 
   </div>
 </div>
 
 <script src="<?php echo BASEURL; ?>/public/assets/js/core/jquery.min.js"></script>
+<script src="<?php echo BASEURL;?>/public/js/helpers.js"></script>
 
 <div class="row">
   <div class="card col-lg-12 content-div">
@@ -107,14 +130,22 @@ use App\Config\ConfigPerfil;
         $("#formulario").load(url);
     }
 
+  function buscarUsuarios() {
+    usuarios();
+    return false;
+  }
+
   usuarios();
   function usuarios() {
     $('#append-usuariosChamadosViaAjax').html('<div class="col-md-12"><br><center><h3>Carregando...</h3></center></div>');
-    var rota = $('#form').attr('action');
-    $.post(rota,
-
-     $('#form').serialize(),
-
+    var rota = "<?php echo BASEURL; ?>/usuario/usuariosChamadosViaAjax";
+    $.post(rota, {
+       '_token': '<?php echo TOKEN; ?>',
+       'email': $("#email").val(),
+       'id_empresa' : $("#id_empresa").val(),
+       'email' : $("#email").val(),
+       'status' : $("#status").val()
+    },
     function(resultado) {
       $('#append-usuariosChamadosViaAjax').empty();
       $('#append-usuariosChamadosViaAjax').append(resultado);

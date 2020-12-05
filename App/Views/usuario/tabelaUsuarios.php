@@ -13,6 +13,7 @@ use App\Config\ConfigPerfil;
               <th>Nome</th>
               <th class="hidden-when-mobile">E-mail</th>
               <th>Perfil</th>
+              <th class="hidden-when-mobile">Empresa</th>
               <th style="text-align:right;padding-right:0">
                 <?php $rota = BASEURL.'/usuario/modalFormulario';?>
                 <?php if (Session::get('idPerfil') != ConfigPerfil::vendedor()):?>
@@ -40,6 +41,7 @@ use App\Config\ConfigPerfil;
                 <td><?php echo $usuario->nome;?></td>
                 <td class="hidden-when-mobile"><?php echo $usuario->email;?></td>
                 <td><?php echo $usuario->perfil;?></td>
+                <td class="hidden-when-mobile"><?php echo $usuario->nomeEmpresa;?></td>
                 <td style="text-align:right">
 
         <div class="btn-group" role="group">
